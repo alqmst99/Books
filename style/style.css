@@ -268,7 +268,7 @@ cursor: pointer;
     right:0;
     opacity: 1;
 }
-/* Home Section */
+/*################ Home Section ################*/
 .home{
     background-image: url('../Assets/bg-img.jpg');
     background-size: cover;
@@ -316,9 +316,35 @@ cursor: pointer;
    transform: scale(.9);
 }
 
+/*################ Icons Section ################*/
+.icons-container{
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(25rem, 1fr));
+    gap:1.5rem;
+    background: rgb(248, 245, 71);
+}
 
+.icons-container .icons{
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 2rem 0;
+}
+.icons-container .icons i{
+    font-size: 3.5rem;
+    color: var(--purple);
+}
+.icons-container .icons h3{
+    font-size: 2.2rem;
+    color: var(--purple);
+    padding-bottom: .5rem;
+}
+.icons-container .icons p{
+    font-size: 1.4rem;
+    color: var(--light-color);
+    text-shadow: 0 0 5px var(--purple);
 
-
+}
 
 
 
