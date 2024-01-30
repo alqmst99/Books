@@ -46,6 +46,18 @@ regClose.addEventListener('click', ()=>{
     regForm.classList.remove('view');
 })
 
+//Regisdet
+
+let detCard= document.querySelector('.det-form-container')
+let det= document.querySelector('.det')
+let detClose= document.querySelector('#close-det')
+
+det.addEventListener('click', ()=>{
+    detCard.classList.add('view');
+})
+detClose.addEventListener('click', ()=>{
+    detCard.classList.remove('view');
+})
 
 //Recharge 
 window.onload= ()=>{
@@ -58,7 +70,7 @@ window.onload= ()=>{
         document.querySelector('.header-2').classList.remove('active');
     };
 
-    //fadeOut();
+    fadeOut();
 };
 
 //Loader 
@@ -66,9 +78,9 @@ function loader(){
     let loader= document.querySelector('.loader-container');
     loader.classList.add('active');
     };
-    // function fadeOut(){
-    //     setTimeout(
-    //         loader()
-    //     , 1000);
+    function fadeOut(){
+        setTimeout(
+            loader()
+        , 4000);
 
-    // };
+    };

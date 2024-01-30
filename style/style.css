@@ -315,8 +315,10 @@ header .header-2 .nav-2 a:hover {
 }
 
 .reg-form-container form {
-    background:transparent;
+    background-image: url("./../Assets/reg-bkg.jpg");
     background-position: cover;
+    background-repeat: no-repeat;
+    background-size: cover;
     border: var(--border);
     width: 40rem;
     padding: 4rem;
@@ -326,7 +328,7 @@ header .header-2 .nav-2 a:hover {
 }
 
 .reg-form-container form h3 {
-    font-size: 2.5 rem;
+    font-size: 2.5rem;
     text-transform: uppercase;
     color: var(--black);
     text-align: center;
@@ -367,18 +369,9 @@ header .header-2 .nav-2 a:hover {
     margin: 1.5rem 0;
 }
 
-.reg-form-container form p {
-    padding-top: .8rem;
-    color: var(--light-color);
-    font-size: 1.5rem;
-}
 
-.reg-form-container form a {
-    color: var(--purple);
-    text-decoration: underline;
-}
 
-.reg-form-container #close-login {
+.reg-form-container #close-reg {
     position: absolute;
     top: 1.5rem;
     right: 2.5rem;
@@ -391,6 +384,77 @@ header .header-2 .nav-2 a:hover {
     right: 0;
     opacity: 1;
 }
+/* DETAIL */
+.det-form-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(255, 0, 234, 0.6);
+    position: fixed;
+    top: 0;
+    right: -105%;
+    z-index: 100000;
+    height: 100%;
+    width: 100%;
+    opacity: 0;
+}
+.det-form-container .box {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 2rem 1rem;
+    margin: 1rem 0;
+    position: relative;
+    overflow: hidden;
+    border: var(--border);
+    text-align: center;
+}
+
+.det-form-container .box:hover {
+    border: var(--border-hover);
+    box-shadow: 0 0 10px var(--purple);
+}
+.det-form-container .box {
+    padding: 2rem;
+    background: linear-gradient(-15deg, rgba(255, 0, 234) 30%, rgba(255, 131, 245) 30.1%);
+}
+.det-form-container .box  .content {
+    padding: 2.5rem;
+}
+
+.det-form-container .box .content h3 {
+    font-size: 2rem;
+    color: var(--black);
+}
+.det-form-container .box .content p{
+    font-size: 1.5rem;
+}
+.det-form-container .box  .content .price {
+    font-size: 2.2rem;
+    color: var(--black);
+    padding-top: 1rem;
+}
+
+.det-form-container .box  .content .price span {
+    font-size: 1.5rem;
+    color: var(--purple);
+    text-decoration: line-through;
+}
+
+.det-form-container #close-det {
+    position: absolute;
+    top: 1.5rem;
+    right: 2.5rem;
+    font-size: 5rem;
+    color: var(--black);
+    cursor: pointer;
+}
+.det-form-container.view {
+    right: 0;
+    opacity: 1;}
+
+
+  
 
 /*################ HOME Section ################*/
 .home {
@@ -909,6 +973,9 @@ justify-content: center;
     width: 10rem;
     color: green;
 }
+
+/*################DETAIL Section ################*/
+
 
 
 
