@@ -1,5 +1,7 @@
 var swiper = new Swiper(".featured-slide", {
     loop:true,
+    grabCursor:true,
+    spaceBetween:10,
     centeredSlides:true,
     autoplay:{
        delay: 9500,
@@ -30,6 +32,8 @@ prevEl:".swiper-button-prev",
        },
      });
      var swiper = new Swiper(".arrivals-slide", {
+      spaceBetween:10,
+      grabCursor:true,
       loop:true,
       centeredSlides:true,
       autoplay:{
@@ -53,3 +57,5 @@ prevEl:".swiper-button-prev",
         
          },
        });
+
+       

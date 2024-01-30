@@ -18,7 +18,8 @@ window.onscroll= ()=>{
     else{
 
         document.querySelector('.header-2').classList.remove('active');
-    }
+    };
+
 };
 //Login Form
 
@@ -41,8 +42,19 @@ window.onload= ()=>{
     else{
 
         document.querySelector('.header-2').classList.remove('active');
-    }
+    };
+
+    fadeOut();
 };
 
-//slider
-
+//Loader 
+function loader(){
+    let loader= document.querySelector('.loader-container');
+    loader.classList.add('active');
+    };
+    function fadeOut(){
+        setTimeout(
+            loader()
+        , 3000);
+        console.log(Date.now());
+    };

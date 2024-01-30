@@ -1,5 +1,7 @@
 var swiper = new Swiper(".reviews-slide", {
+  spaceBetween:10,
     loop:true,
+    grabCursor:true,
     centeredSlides:true,
     autoplay:{
        delay: 9500,
