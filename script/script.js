@@ -40,23 +40,23 @@ let reg= document.querySelector('.reg')
 let regClose= document.querySelector('#close-reg')
 
 reg.addEventListener('click', ()=>{
-    regForm.classList.add('view');
+    regForm.classList.toggle('view');
 })
 regClose.addEventListener('click', ()=>{
-    regForm.classList.remove('view');
+    regForm.classList.toggle('view');
 })
 
-//Regisdet
+//Detail
 
-let detCard= document.querySelector('.det-form-container')
-let det= document.querySelector('.det')
+let detCard= document.querySelector('.det-container')
+//let det= document.querySelector('.fa-search')
 let detClose= document.querySelector('#close-det')
 
-det.addEventListener('click', ()=>{
-    detCard.classList.add('view');
-})
+const det= ()=>{
+    detCard.classList.toggle('view');
+}
 detClose.addEventListener('click', ()=>{
-    detCard.classList.remove('view');
+    detCard.classList.toggle('view');
 })
 
 //Recharge 
