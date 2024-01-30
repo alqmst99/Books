@@ -1,3 +1,4 @@
+//Reviews Slider
 var swiper = new Swiper(".reviews-slide", {
   spaceBetween:10,
     loop:true,

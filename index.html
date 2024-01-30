@@ -60,26 +60,38 @@
         <form action="">
             <h3>Sing In</h3>
             <span>username</span>
-            <input type="email" class="swiper-slide box" name="username" id="user" placeholder="Enter your email">
+            <input type="email" class="" name="username" id="user" placeholder="Enter your email">
             <span>password</span>
-            <input type="password" class="swiper-slide box" name="password" id="password"
+            <input type="password" class="" name="password" id="password"
                 placeholder="Enter your password">
-            <div class="checkswiper-slide box">
-                <input type="checkswiper-slide box" name="sswiper-slide box" id="remember-me">
+            <div class="checkbox">
+                <input type="checkbox" name="box" id="remember-me">
                 <label for="remember-me">remember session</label>
             </div>
             <input type="submit" value="sing in" class="btn">
             <p>forget password ? <a href="#">click here</a></p>
-            <p>don't have a account ? <a href="#">create one</a></p>
+            <p>don't have a account ? <a href="#" class="reg">create one</a></p>
         </form>
     </div>
-    <!-- Register Form
-    <div class="login-form-container">
-        <div id="close-login" class="fas fa-times"></div>
+    <!-- Register Form -->
+    <div class="reg-form-container">
+        <div id="close-reg" class="fas fa-times"></div>
         <form action="">
             <h3>Sing In</h3>
-            <span>username</span>
+            <span>email</span>
             <input type="email" class="swiper-slide box" name="username" id="user" placeholder="Enter your email">
+            <span>name</span>
+            <input type="name" class="swiper-slide box" name="name" id="name" placeholder="Enter your first name">
+            <span>last name</span>
+            <input type="text" class="swiper-slide box" name="last-name" id="last" placeholder="Enter your last name">
+            <span>country</span>
+            <select name="country" id="country">
+                <option value="country-1"> name country</option>
+                <option value="country-1"> name country</option>
+                <option value="country-1"> name country</option>
+                <option value="country-1"> name country</option>
+            </select>
+
             <span>password</span>
             <input type="password" class="swiper-slide box" name="password" id="password"
                 placeholder="Enter your password">
@@ -87,11 +99,10 @@
                 <input type="checkswiper-slide box" name="sswiper-slide box" id="remember-me">
                 <label for="remember-me">remember session</label>
             </div>
-            <input type="submit" value="sing in" class="btn">
-            <p>forget password ? <a href="#">click here</a></p>
-            <p>don't have a account ? <a href="#">create one</a></p>
+            <input type="submit" value="sing up" class="btn">
+
         </form>
-    </div> -->
+    </div>
 
         <!-- forgot Form
     <div class="login-form-container">
@@ -913,7 +924,6 @@
 </div>
 
 </body>
-<script src="./script/loader.js"></script>
 <script src="./script/script.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <script src="./script/home.js"></script>

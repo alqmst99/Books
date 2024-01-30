@@ -33,6 +33,20 @@ loginIco.addEventListener('click', ()=>{
 loginClose.addEventListener('click', ()=>{
     loginForm.classList.remove('view');
 })
+//Register
+
+let regForm= document.querySelector('.reg-form-container')
+let reg= document.querySelector('.reg')
+let regClose= document.querySelector('#close-reg')
+
+reg.addEventListener('click', ()=>{
+    regForm.classList.add('view');
+})
+regClose.addEventListener('click', ()=>{
+    regForm.classList.remove('view');
+})
+
+
 //Recharge 
 window.onload= ()=>{
     if(window.scrollY > 80){
@@ -44,7 +58,7 @@ window.onload= ()=>{
         document.querySelector('.header-2').classList.remove('active');
     };
 
-    fadeOut();
+    //fadeOut();
 };
 
 //Loader 
@@ -52,9 +66,9 @@ function loader(){
     let loader= document.querySelector('.loader-container');
     loader.classList.add('active');
     };
-    function fadeOut(){
-        setTimeout(
-            loader()
-        , 3000);
-        console.log(Date.now());
-    };
+    // function fadeOut(){
+    //     setTimeout(
+    //         loader()
+    //     , 1000);
+
+    // };

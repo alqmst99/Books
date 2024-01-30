@@ -1,3 +1,4 @@
+//Blogs Slider
 var swiper = new Swiper(".blogs-slide", {
     spaceBetween:10,
       loop:true,

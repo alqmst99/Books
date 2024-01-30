@@ -299,6 +299,98 @@ header .header-2 .nav-2 a:hover {
     right: 0;
     opacity: 1;
 }
+/* REGISTER FORM */
+.reg-form-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(255, 0, 234, 0.6);
+    position: fixed;
+    top: 0;
+    right: -105%;
+    z-index: 100000;
+    height: 100%;
+    width: 100%;
+    opacity: 0;
+}
+
+.reg-form-container form {
+    background:transparent;
+    background-position: cover;
+    border: var(--border);
+    width: 40rem;
+    padding: 4rem;
+    box-shadow: var(--box-shadow);
+    border-radius: 2rem;
+    margin: 2rem;
+}
+
+.reg-form-container form h3 {
+    font-size: 2.5 rem;
+    text-transform: uppercase;
+    color: var(--black);
+    text-align: center;
+}
+
+.reg-form-container form span {
+    display: block;
+    font-size: 1.5rem;
+    padding-top: 1rem;
+}
+
+.reg-form-container form .box {
+    width: 100%;
+    font-size: 1.6rem;
+    border: var(--border);
+    border-radius: 2rem;
+    padding: 1rem 1.2rem;
+    color: var(--black);
+    text-transform: none;
+}
+
+.reg-form-container form .checkbox {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    padding: 1.2rem 0;
+}
+
+.reg-form-container form label {
+    font-size: 1.5rem;
+    color: var(--light-color);
+    cursor: pointer;
+}
+
+.reg-form-container form .btn {
+    text-align: center;
+    width: 100%;
+    margin: 1.5rem 0;
+}
+
+.reg-form-container form p {
+    padding-top: .8rem;
+    color: var(--light-color);
+    font-size: 1.5rem;
+}
+
+.reg-form-container form a {
+    color: var(--purple);
+    text-decoration: underline;
+}
+
+.reg-form-container #close-login {
+    position: absolute;
+    top: 1.5rem;
+    right: 2.5rem;
+    font-size: 5rem;
+    color: var(--black);
+    cursor: pointer;
+}
+
+.reg-form-container.view {
+    right: 0;
+    opacity: 1;
+}
 
 /*################ HOME Section ################*/
 .home {
