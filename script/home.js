@@ -1,3 +1,4 @@
+//Home Slider
 var swiper = new Swiper(".bookSlide", {
     loop:true,
     centeredSlides:true,

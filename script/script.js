@@ -1,7 +1,6 @@
+/*############## Header & Main ##############*/
 
-/*############## Header ##############*/
-
-//view responsive search form
+//View Responsive Search Form
 const searchForm = document.querySelector('.search-form');
 const searchBtn= document.querySelector('#search-btn');
 searchBtn.addEventListener('click', ()=>{

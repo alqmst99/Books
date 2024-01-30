@@ -1,3 +1,4 @@
+//Featured Slider
 var swiper = new Swiper(".featured-slide", {
     loop:true,
     grabCursor:true,
