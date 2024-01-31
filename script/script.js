@@ -54,6 +54,9 @@ let detClose= document.querySelector('#close-det')
 const det= ()=>{
     detCard.classList.toggle('view');
 }
+const closeDet= ()=>{
+    detCard.classList.toggle('view');
+}
 detClose.addEventListener('click', ()=>{
     detCard.classList.toggle('view');
 })
@@ -80,6 +83,6 @@ function loader(){
     function fadeOut(){
         setTimeout(
             loader()
-        , 1000000);
+        , 3000000);
 
     };
