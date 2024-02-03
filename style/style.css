@@ -1024,6 +1024,9 @@ header .header-2 .nav-2 a:hover {
     .footer .box-container .box .map {
         height: 30%;
     }
+    .det-container .box .images img{
+        width: 15rem;
+    }
 }
 
 @media (max-width:768px) {
