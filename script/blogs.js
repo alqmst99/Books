@@ -1,5 +1,5 @@
 //Blogs Slider
-var swiper = new Swiper(".blogs-slide", {
+var swiper = new Swiper(".container", {
     spaceBetween:10,
       loop:true,
       grabCursor:true,
