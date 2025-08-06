@@ -20,30 +20,30 @@ window.onscroll= ()=>{
     };
 
 };
-//Login Form
+// //Login Form
 
-let loginForm= document.querySelector('.login-form-container')
-let loginIco= document.querySelector('.login')
-let loginClose= document.querySelector('#close-login')
+// let loginForm= document.querySelector('.login-form-container')
+// let loginIco= document.querySelector('.login')
+// let loginClose= document.querySelector('#close-login')
 
-loginIco.addEventListener('click', ()=>{
-    loginForm.classList.add('view');
-})
-loginClose.addEventListener('click', ()=>{
-    loginForm.classList.remove('view');
-})
-//Register
+// loginIco.addEventListener('click', ()=>{
+//     loginForm.classList.add('view');
+// })
+// loginClose.addEventListener('click', ()=>{
+//     loginForm.classList.remove('view');
+// })
+// //Register
 
-let regForm= document.querySelector('.reg-form-container')
-let reg= document.querySelector('.reg')
-let regClose= document.querySelector('#close-reg')
+// let regForm= document.querySelector('.reg-form-container')
+// let reg= document.querySelector('.reg')
+// let regClose= document.querySelector('#close-reg')
 
-reg.addEventListener('click', ()=>{
-    regForm.classList.toggle('view');
-})
-regClose.addEventListener('click', ()=>{
-    regForm.classList.toggle('view');
-})
+// reg.addEventListener('click', ()=>{
+//     regForm.classList.toggle('view');
+// })
+// regClose.addEventListener('click', ()=>{
+//     regForm.classList.toggle('view');
+// })
 
 //Detail
 
