@@ -471,7 +471,7 @@ header .header-2 .nav-2 a:hover {
 
 /*################ HOME Section ################*/
 .home {
-    background-image: url('./assets/bg-img.jpg');
+    background-image: url('../assets/bg-img.jpg');
     background-size: cover;
     background-position: center;
 }
@@ -657,7 +657,7 @@ header .header-2 .nav-2 a:hover {
 /*################ NEWLETTER Section ################*/
 
 .newsletter {
-    background-image: url('./../Assets/bg-img.jpg');
+    background-image: url('../assets/bg-img.jpg');
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
