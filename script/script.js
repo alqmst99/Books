@@ -83,6 +83,6 @@ function loader(){
     function fadeOut(){
         setTimeout(
             loader()
-        , 3000000);
+        , 300000);
 
     };
