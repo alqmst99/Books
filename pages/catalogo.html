@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Catálogo – LibroVivo</title>
+  <meta name="description" content="Explora nuestro catálogo completo de libros digitales gratuitos. Filtra por categoría, año o autor." />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,800;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../style/style.css" />
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg lv-navbar sticky-top" id="mainNav">
+  <div class="container">
+    <a class="navbar-brand lv-brand" href="../index.html"><i class="fas fa-book-open me-2"></i>LibroVivo</a>
+    <button class="navbar-toggler lv-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
+      <i class="fas fa-bars"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navMenu">
+      <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-1">
+        <li class="nav-item"><a class="nav-link lv-nav-link" href="../index.html"><i class="fas fa-home me-1"></i>Inicio</a></li>
+        <li class="nav-item"><a class="nav-link lv-nav-link active" href="catalogo.html"><i class="fas fa-th-large me-1"></i>Catálogo</a></li>
+        <li class="nav-item"><button class="btn lv-btn-donate ms-lg-3" onclick="openDonate()"><i class="fas fa-heart me-1"></i>Donar</button></li>
+      </ul>
+      <div class="lv-search-wrap ms-lg-4 mt-3 mt-lg-0">
+        <input type="search" id="globalSearch" class="lv-search-input" placeholder="Buscar libro o autor…" autocomplete="off" />
+        <i class="fas fa-search lv-search-icon"></i>
+        <div id="searchResults" class="lv-search-dropdown"></div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- PAGE HEADER -->
+<div class="lv-page-header">
+  <div class="container">
+    <h1 class="lv-page-title">Catálogo <em>Completo</em></h1>
+    <p class="lv-page-sub">Explora, filtra y encuentra tu próxima lectura</p>
+  </div>
+</div>
+
+<div class="container-fluid py-4">
+  <div class="row">
+
+    <!-- SIDEBAR FILTROS -->
+    <div class="col-lg-3" id="sidebarCol">
+      <div class="lv-sidebar" id="filterSidebar">
+        <div class="lv-sidebar-header">
+          <h5><i class="fas fa-sliders-h me-2"></i>Filtros</h5>
+          <button class="lv-sidebar-close d-lg-none" id="closeSidebar"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="lv-filter-group">
+          <label class="lv-filter-label">Búsqueda</label>
+          <div class="lv-sidebar-search-wrap">
+            <input type="search" id="sidebarSearch" class="lv-sidebar-search" placeholder="Título o autor…" />
+            <i class="fas fa-search"></i>
+          </div>
+        </div>
+        <div class="lv-filter-group">
+          <label class="lv-filter-label">Categoría</label>
+          <div id="filterCategories" class="lv-filter-options"></div>
+        </div>
+        <div class="lv-filter-group">
+          <label class="lv-filter-label">Período</label>
+          <select id="filterYear" class="lv-filter-select">
+            <option value="">Todos los años</option>
+            <option value="ancient">Antigüedad (antes de 1800)</option>
+            <option value="classic">Clásicos (1800–1950)</option>
+            <option value="modern">Modernos (1950–2000)</option>
+            <option value="contemporary">Contemporáneos (2000+)</option>
+          </select>
+        </div>
+        <div class="lv-filter-group">
+          <label class="lv-filter-label">Idioma</label>
+          <div class="lv-filter-options">
+            <label class="lv-check-wrap"><input type="radio" name="lang" value="" checked /> Todos</label>
+            <label class="lv-check-wrap"><input type="radio" name="lang" value="es" /> Español</label>
+            <label class="lv-check-wrap"><input type="radio" name="lang" value="en" /> Inglés</label>
+          </div>
+        </div>
+        <div class="lv-filter-group">
+          <label class="lv-filter-label">Tipo</label>
+          <div class="lv-filter-options">
+            <label class="lv-check-wrap"><input type="checkbox" id="filterFeatured" /> Solo destacados</label>
+            <label class="lv-check-wrap"><input type="checkbox" id="filterNew" /> Solo novedades</label>
+          </div>
+        </div>
+        <button class="lv-btn-outline w-100 mt-3" id="clearFilters">
+          <i class="fas fa-undo me-2"></i>Limpiar filtros
+        </button>
+      </div>
+    </div>
+
+    <div class="lv-sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- GRID LIBROS -->
+    <div class="col-lg-9">
+      <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
+        <button class="btn lv-filter-toggle d-lg-none" id="openSidebar">
+          <i class="fas fa-sliders-h me-2"></i>Filtros
+        </button>
+        <span class="lv-results-count" id="resultsCount">Cargando...</span>
+        <select class="lv-filter-select" id="sortSelect" style="width:auto">
+          <option value="title">A–Z</option>
+          <option value="year-desc">Más recientes</option>
+          <option value="year-asc">Más antiguos</option>
+        </select>
+      </div>
+      <div class="row g-4" id="booksGrid"></div>
+      <div class="lv-empty" id="emptyState" style="display:none">
+        <i class="fas fa-search-minus lv-empty-icon"></i>
+        <h4>Sin resultados</h4>
+        <p>Prueba con otros filtros o términos de búsqueda.</p>
+        <button class="lv-btn-outline" id="clearFilters2"><i class="fas fa-undo me-2"></i>Limpiar filtros</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DONATE MODAL -->
+<div class="lv-modal-overlay" id="donateModal">
+  <div class="lv-modal">
+    <button class="lv-modal-close" onclick="closeDonate()"><i class="fas fa-times"></i></button>
+    <div class="text-center">
+      <i class="fas fa-heart lv-donate-icon"></i>
+      <h3 class="lv-modal-title">Apoya LibroVivo</h3>
+      <p class="lv-modal-sub">Tu donación nos ayuda a mantener esta biblioteca gratuita.</p>
+      <div class="lv-donate-amounts">
+        <button class="lv-donate-amount" onclick="donate(1)">$1</button>
+        <button class="lv-donate-amount" onclick="donate(5)">$5</button>
+        <button class="lv-donate-amount lv-donate-popular" onclick="donate(10)">$10 <span>Popular</span></button>
+        <button class="lv-donate-amount" onclick="donate(25)">$25</button>
+      </div>
+      <a id="paypalBtn" href="#" target="_blank" class="lv-btn-primary w-100 mt-3" style="display:none">
+        <i class="fab fa-paypal me-2"></i>Donar con PayPal
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="lv-footer">
+  <div class="container">
+    <div class="lv-footer-bottom text-center">
+      <span>© 2025 LibroVivo · <i class="fas fa-heart text-danger"></i> para los amantes de los libros</span>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../script/data.js"></script>
+<script src="../script/app.js"></script>
+</body>
+</html>
