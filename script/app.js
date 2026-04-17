@@ -31,29 +31,29 @@ function coverFallback(title) {
 }
 
 function bookCard(book, size = 'col-md-4 col-sm-6') {
- if (!book) return ''; // or a placeholder card
+  const year = book.year < 0 ? Math.abs(book.year) + ' a.C.' : book.year;
   return `
   <div class="${size} lv-book-col">
-    <div class="lv-book-card" onclick="goReader('${book?.slug}')">
+   <div class="lv-book-card" onclick="goReader('${book.slug}')">
       <div class="lv-book-cover-wrap">
-        <img src="${book?.cover}" alt="${book?.title}" class="lv-book-cover" loading="lazy"
-             onerror="this.src='${coverFallback(book?.title)}'">
+        <img src="${book.cover}" alt="${book.title}" class="lv-book-cover" loading="lazy"
+             onerror="this.src='${coverFallback(book.title)}'">
         <div class="lv-book-overlay">
           <button class="lv-read-btn">
-            ${book?.demoOnly ? '<i class="fas fa-info-circle me-2"></i>Ver info' : '<i class="fas fa-book-open me-2"></i>Leer ahora'}
+          ${book.demoOnly ? '<i class="fas fa-info-circle me-2"></i>Ver info' : '<i class="fas fa-book-open me-2"></i>Leer ahora'}
           </button>
         </div>
-        ${book?.new      ? '<span class="lv-badge-new">Nuevo</span>'          : ''}
-        ${book?.featured ? '<span class="lv-badge-featured">Destacado</span>' : ''}
-        ${book?.demoOnly ? '<span class="lv-badge-demo">Próx.</span>'         : ''}
+ ${book.new      ? '<span class="lv-badge-new">Nuevo</span>'          : ''}
+        ${book.featured ? '<span class="lv-badge-featured">Destacado</span>' : ''}
+        ${book.demoOnly ? '<span class="lv-badge-demo">Próx.</span>'         : ''}
       </div>
       <div class="lv-book-info">
-        <div class="lv-book-category"><i class="${getCatIcon(book?.category)} me-1"></i>${getCatLabel(book?.category)}</div>
-        <div class="lv-book-title">${book?.title}</div>
-        <div class="lv-book-author">${book?.author}</div>
+        <div class="lv-book-category"><i class="${getCatIcon(book.category)} me-1"></i>${getCatLabel(book.category)}</div>
+        <div class="lv-book-title">${book.title}</div>
+        <div class="lv-book-author">${book.author}</div>
         <div class="d-flex justify-content-between align-items-center mt-auto pt-1">
-          <span class="lv-book-year"><i class="fas fa-calendar-alt me-1"></i>${book?.year}</span>
-          ${book?.pages ? `<span class="lv-book-pages"><i class="fas fa-file-alt me-1"></i>${book?.pages} p.</span>` : ''}
+           <span class="lv-book-year"><i class="fas fa-calendar-alt me-1"></i>${year}</span>
+          ${book.pages ? `<span class="lv-book-pages"><i class="fas fa-file-alt me-1"></i>${book.pages} p.</span>` : ''}
         </div>
       </div>
     </div>
