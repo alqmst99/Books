@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (isLocal) {
     loadLocalPDF();
   } else if (slug) {
-    currentBook = BOOKS.find(b => b.slug === slug);
+    currentBook = BOOKS.find(b => b?.slug === slug);
     if (!currentBook) { showError('Libro no encontrado.'); return; }
     bookKey = `lv_reader_${slug}`;
     setupBookInfo();
