@@ -1,5 +1,5 @@
 /* ============================================================
-   app.js – LibroVivo
+   app.js – FSTBooks
    Rutas: index.html en raíz, pages/ para catálogo/lector,
           scripts/ para JS
    ============================================================ */
@@ -17,36 +17,43 @@ const PAGES   = inPages ? './'  : './pages/';
 
 // Fallback cover SVG inline (no dependencia externa)
 function coverFallback(title) {
-  const colors = ['%236B1E2B','%234A1942','%231A3A4A','%232A4A1A','%234A3A1A'];
-  const c = colors[title.charCodeAt(0) % colors.length];
-  const initial = encodeURIComponent(title[0]?.toUpperCase() || '?');
+  const colors = ['%236B1E2B', '%234A1942', '%231A3A4A', '%232A4A1A', '%234A3A1A'];
+
+  // Safe first character (never undefined)
+  const firstChar = title?.[0] ?? '?';
+
+  // Safe color index (no NaN)
+  const c = colors[firstChar.charCodeAt(0) % colors.length];
+
+  const initial = encodeURIComponent(firstChar.toUpperCase());
+
   return `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='450'%3E%3Crect width='300' height='450' fill='${c}'/%3E%3Crect x='15' y='15' width='270' height='420' fill='none' stroke='rgba(255,255,255,.15)' stroke-width='1'/%3E%3Ccircle cx='150' cy='200' r='60' fill='rgba(255,255,255,.07)'/%3E%3Ctext x='150' y='215' text-anchor='middle' font-family='Georgia%2C serif' font-size='56' font-weight='bold' fill='rgba(255,255,255,.5)'%3E${initial}%3C/text%3E%3C/svg%3E`;
 }
 
 function bookCard(book, size = 'col-md-4 col-sm-6') {
-  const year = book.year < 0 ? Math.abs(book.year) + ' a.C.' : book.year;
+ if (!book) return ''; // or a placeholder card
   return `
   <div class="${size} lv-book-col">
-    <div class="lv-book-card" onclick="goReader('${book.slug}')">
+    <div class="lv-book-card" onclick="goReader('${book?.slug}')">
       <div class="lv-book-cover-wrap">
-        <img src="${book.cover}" alt="${book.title}" class="lv-book-cover" loading="lazy"
-             onerror="this.src='${coverFallback(book.title)}'">
+        <img src="${book?.cover}" alt="${book?.title}" class="lv-book-cover" loading="lazy"
+             onerror="this.src='${coverFallback(book?.title)}'">
         <div class="lv-book-overlay">
           <button class="lv-read-btn">
-            ${book.demoOnly ? '<i class="fas fa-info-circle me-2"></i>Ver info' : '<i class="fas fa-book-open me-2"></i>Leer ahora'}
+            ${book?.demoOnly ? '<i class="fas fa-info-circle me-2"></i>Ver info' : '<i class="fas fa-book-open me-2"></i>Leer ahora'}
           </button>
         </div>
-        ${book.new      ? '<span class="lv-badge-new">Nuevo</span>'          : ''}
-        ${book.featured ? '<span class="lv-badge-featured">Destacado</span>' : ''}
-        ${book.demoOnly ? '<span class="lv-badge-demo">Próx.</span>'         : ''}
+        ${book?.new      ? '<span class="lv-badge-new">Nuevo</span>'          : ''}
+        ${book?.featured ? '<span class="lv-badge-featured">Destacado</span>' : ''}
+        ${book?.demoOnly ? '<span class="lv-badge-demo">Próx.</span>'         : ''}
       </div>
       <div class="lv-book-info">
-        <div class="lv-book-category"><i class="${getCatIcon(book.category)} me-1"></i>${getCatLabel(book.category)}</div>
-        <div class="lv-book-title">${book.title}</div>
-        <div class="lv-book-author">${book.author}</div>
+        <div class="lv-book-category"><i class="${getCatIcon(book?.category)} me-1"></i>${getCatLabel(book?.category)}</div>
+        <div class="lv-book-title">${book?.title}</div>
+        <div class="lv-book-author">${book?.author}</div>
         <div class="d-flex justify-content-between align-items-center mt-auto pt-1">
-          <span class="lv-book-year"><i class="fas fa-calendar-alt me-1"></i>${year}</span>
-          ${book.pages ? `<span class="lv-book-pages"><i class="fas fa-file-alt me-1"></i>${book.pages} p.</span>` : ''}
+          <span class="lv-book-year"><i class="fas fa-calendar-alt me-1"></i>${book?.year}</span>
+          ${book?.pages ? `<span class="lv-book-pages"><i class="fas fa-file-alt me-1"></i>${book?.pages} p.</span>` : ''}
         </div>
       </div>
     </div>
@@ -101,7 +108,7 @@ function donate(amount) {
   event.target.closest('.lv-donate-amount').classList.add('selected');
   const paypalBtn   = qs('#paypalBtn');
   const paypalEmail = 'TU_PAYPAL_EMAIL@gmail.com';
-  paypalBtn.href    = `https://www.paypal.com/donate/?business=${encodeURIComponent(paypalEmail)}&amount=${amount}&currency_code=USD&item_name=Donacion+LibroVivo`;
+  paypalBtn.href    = `https://www.paypal.com/donate/?business=${encodeURIComponent(paypalEmail)}&amount=${amount}&currency_code=USD&item_name=Donacion+FSTBooks`;
   paypalBtn.style.display = 'flex';
 }
 document.addEventListener('keydown', e => {
