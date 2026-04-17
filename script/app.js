@@ -108,7 +108,7 @@ function donate(amount) {
   event.target.closest('.lv-donate-amount').classList.add('selected');
   const paypalBtn   = qs('#paypalBtn');
   const paypalEmail = 'TU_PAYPAL_EMAIL@gmail.com';
-  paypalBtn.href    = `https://www.paypal.com/donate/?business=${encodeURIComponent(paypalEmail)}&amount=${amount}&currency_code=USD&item_name=Donacion+FSTBooks`;
+  paypalBtn.href    = `https://www.paypal.com/donate/?hosted_button_id=W4BCJLPCUQVX6&amount=${amount}&currency_code=USD&item_name=Donacion+FSTBooks`;
   paypalBtn.style.display = 'flex';
 }
 document.addEventListener('keydown', e => {
@@ -319,7 +319,7 @@ function initCatalog() {
 
   function render() {
     let books = [...BOOKS];
-    if (activeCategory) books = books.filter(b => b.category === activeCategory);
+    if (activeCategory) books = books.filter(b => b?.category === activeCategory);
     if (activeYear) {
       books = books.filter(b => {
         if (activeYear === 'ancient')      return b.year < 1800;
