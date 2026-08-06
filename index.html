@@ -3,16 +3,61 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>FSTBooks – Biblioteca Digital Gratuita</title>
-  <meta name="description" content="FSTBooks es tu biblioteca digital gratuita. Lee, descarga y disfruta miles de libros en PDF sin costo alguno." />
+  <title>FSTBooks – Free Digital Library | Biblioteca Digital Gratuita</title>
+  <meta name="description" content="FSTBooks is a free digital library. Read classic public-domain books online with progress saving and AI summaries. Biblioteca digital gratuita de libros clásicos." />
+  <meta name="keywords" content="free books, digital library, Project Gutenberg, PDF reader, classic literature, biblioteca digital, libros gratis, FSTBooks, FSTail" />
+  <meta name="author" content="FSTail Solutions" />
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+  <link rel="canonical" href="https://alqmst99.github.io/BookStore/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="FSTBooks – Free Digital Library" />
+  <meta property="og:description" content="Read classic public-domain books online. Free PDF reader with AI summaries." />
+  <meta property="og:url" content="https://alqmst99.github.io/BookStore/" />
+  <meta property="og:site_name" content="FSTBooks" />
+  <meta property="og:locale" content="es_AR" />
+  <meta property="og:locale:alternate" content="en_US" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="FSTBooks – Free Digital Library" />
+  <meta name="twitter:description" content="Read classic public-domain books online for free." />
+  <meta name="theme-color" content="#FAF8F4" />
+  <meta name="ai-content-declaration" content="This site provides free public-domain literature for reading and education." />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "FSTBooks",
+    "url": "https://alqmst99.github.io/BookStore/",
+    "description": "Free digital library of public-domain books with online reader and AI summaries.",
+    "publisher": {
+      "@type": "Organization",
+      "name": "FSTail Solutions",
+      "url": "https://alqmst99.github.io/profesional-plan/"
+    },
+    "inLanguage": ["es", "en"],
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://alqmst99.github.io/BookStore/pages/catalogo.html?q={search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
+  }
+  </script>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,800;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
   <link rel="stylesheet" href="./style.css" />
   <link rel="shortcut icon" href="./assets/book-solid.svg" type="image/x-icon">
 </head>
 <body>
+
+<!-- PAGE LOADER -->
+<div id="pageLoader">
+  <div class="page-loader-inner">
+    <div class="page-loader-wordmark">FST<span>Books</span></div>
+    <div class="page-loader-line"></div>
+    <div class="page-loader-sub">Biblioteca digital</div>
+  </div>
+</div>
 
 <!-- NAVBAR -->
 <nav class="navbar navbar-expand-lg lv-navbar sticky-top" id="mainNav">
@@ -28,9 +73,12 @@
         <li class="nav-item"><a class="nav-link lv-nav-link active" href="index.html"><i class="fas fa-home me-1"></i>Inicio</a></li>
         <li class="nav-item"><a class="nav-link lv-nav-link" href="pages/catalogo.html"><i class="fas fa-th-large me-1"></i>Catálogo</a></li>
         <li class="nav-item">
-          <button class="btn lv-btn-donate ms-lg-3" onclick="openDonate()">
+          <button class="btn lv-btn-donate ms-lg-3" onclick="openDonate()" data-i18n="nav.donate">
             <i class="fas fa-heart me-1"></i>Donar
           </button>
+        </li>
+        <li class="nav-item ms-lg-2">
+          <button type="button" class="lv-lang-btn" id="langToggle" title="ES / EN">ES</button>
         </li>
       </ul>
       <div class="lv-search-wrap ms-lg-4 mt-3 mt-lg-0">
@@ -48,9 +96,9 @@
   <div class="container lv-hero-content">
     <div class="row align-items-center min-vh-75">
       <div class="col-lg-6">
-        <span class="lv-hero-badge"><i class="fas fa-star me-1"></i>Biblioteca 100% gratuita</span>
-        <h1 class="lv-hero-title">El saber no<br><em>tiene precio</em></h1>
-        <p class="lv-hero-sub">Libros clásicos en dominio público disponibles para leer en tu navegador. Lee, guarda tu progreso y usa IA para entender mejor cada obra.</p>
+        <span class="lv-hero-badge"><i class="fas fa-star me-1"></i><span data-i18n="hero.badge">Biblioteca 100% gratuita</span></span>
+        <h1 class="lv-hero-title" data-i18n="hero.title">El saber no<br><em>tiene precio</em></h1>
+        <p class="lv-hero-sub" data-i18n="hero.sub">Libros clásicos en dominio público para leer en tu navegador. Guardá tu progreso y usá IA para entender mejor cada obra.</p>
         <div class="d-flex gap-3 flex-wrap">
           <a href="pages/catalogo.html" class="lv-btn-primary"><i class="fas fa-compass me-2"></i>Explorar Catálogo</a>
           <a href="#upload-section" class="lv-btn-outline"><i class="fas fa-upload me-2"></i>Mi PDF</a>
@@ -61,9 +109,29 @@
           <div class="lv-stat"><span>∞</span><small>Gratis</small></div>
         </div>
       </div>
-      <div class="col-lg-6 d-none d-lg-block">
+      <div class="col-lg-6 d-none d-lg-block overflow">
         <div class="lv-hero-books" id="heroBooks"></div>
       </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- RELATED PROJECTS BANNER -->
+<section class="lv-section lv-projects-banner" id="proyectos-fst">
+  <div class="container">
+    <div class="lv-section-header">
+      <div>
+        <h2 class="lv-section-title" data-i18n="projects.title">Más de <em>FSTail</em></h2>
+        <p class="lv-section-sub" data-i18n="projects.sub">Otros proyectos del ecosistema</p>
+      </div>
+      <a href="https://alqmst99.github.io/profesional-plan/" target="_blank" rel="noopener" class="lv-link-more">FSTail Solutions <i class="fas fa-arrow-right ms-1"></i></a>
+    </div>
+    <div class="lv-projects-track" id="projectsBannerTrack"></div>
+    <div class="text-center mt-4">
+      <a href="https://alqmst99.github.io/profesional-plan/pages/contact.html" target="_blank" rel="noopener" class="lv-btn-primary" data-i18n="cta.contact">
+        <i class="fas fa-rocket me-2"></i>¿Querés un sitio así? Hablemos
+      </a>
     </div>
   </div>
 </section>
@@ -73,7 +141,7 @@
   <div class="container">
     <div class="lv-section-header">
       <div>
-        <h2 class="lv-section-title">Explorar por <em>Categoría</em></h2>
+        <h2 class="lv-section-title" data-i18n="cat.title">Explorar por <em>Categoría</em></h2>
         <p class="lv-section-sub">Encuentra exactamente lo que buscas</p>
       </div>
     </div>
@@ -85,7 +153,7 @@
 <section class="lv-section lv-new-section" id="novedades">
   <div class="container">
     <div class="lv-section-header">
-      <h2 class="lv-section-title">Recién <em>Agregados</em></h2>
+      <h2 class="lv-section-title" data-i18n="new.title">Recién <em>Agregados</em></h2>
       <a href="pages/catalogo.html?filter=new" class="lv-link-more">Ver todos <i class="fas fa-arrow-right ms-1"></i></a>
     </div>
     <div class="swiper lv-swiper" id="newSwiper">
@@ -99,7 +167,7 @@
 <section class="lv-section lv-featured-section" id="destacados">
   <div class="container">
     <div class="lv-section-header">
-      <h2 class="lv-section-title">Libros <em>Destacados</em></h2>
+      <h2 class="lv-section-title" data-i18n="feat.title">Libros <em>Destacados</em></h2>
       <a href="pages/catalogo.html?filter=featured" class="lv-link-more">Ver todos <i class="fas fa-arrow-right ms-1"></i></a>
     </div>
     <div class="swiper lv-swiper" id="featuredSwiper">
@@ -143,10 +211,10 @@
       <h3 class="lv-modal-title">Apoya FSTBooks</h3>
       <p class="lv-modal-sub">Tu donación nos ayuda a mantener esta biblioteca gratuita y agregar más libros cada semana.</p>
       <div class="lv-donate-amounts">
-        <button class="lv-donate-amount" onclick="donate(1)">$1</button>
-        <button class="lv-donate-amount" onclick="donate(5)">$5</button>
-        <button class="lv-donate-amount lv-donate-popular" onclick="donate(10)">$10 <span>Popular</span></button>
-        <button class="lv-donate-amount" onclick="donate(25)">$25</button>
+        <button class="lv-donate-amount" onclick="donate(1, this)">$1</button>
+        <button class="lv-donate-amount" onclick="donate(5, this)">$5</button>
+        <button class="lv-donate-amount lv-donate-popular" onclick="donate(10, this)">$10 <span>Popular</span></button>
+        <button class="lv-donate-amount" onclick="donate(25, this)">$25</button>
       </div>
       <a id="paypalBtn" href="#" target="_blank" class="lv-btn-primary w-100 mt-3" style="display:none">
         <i class="fab fa-paypal me-2"></i>Donar con PayPal
@@ -155,6 +223,20 @@
     </div>
   </div>
 </div>
+
+
+<!-- CTA FSTAIL -->
+<section class="lv-section lv-cta-fst">
+  <div class="container text-center">
+    <p class="lv-hero-badge mx-auto" style="display:inline-flex">FSTail Solutions</p>
+    <h2 class="lv-section-title mt-2" data-i18n="cta.title">Digital solutions built to <em>grow</em></h2>
+    <p class="lv-section-sub mx-auto" style="max-width:52rem" data-i18n="cta.sub">Landing pages, full websites and maintenance. Clean code, precise design, results that last.</p>
+    <div class="d-flex gap-3 flex-wrap justify-content-center mt-3">
+      <a href="https://alqmst99.github.io/profesional-plan/" target="_blank" rel="noopener" class="lv-btn-primary" data-i18n="cta.services">Ver servicios</a>
+      <a href="https://alqmst99.github.io/profesional-plan/pages/contact.html" target="_blank" rel="noopener" class="lv-btn-outline" data-i18n="cta.contact2">Contactar</a>
+    </div>
+  </div>
+</section>
 
 <!-- FOOTER -->
 <footer class="lv-footer">
@@ -198,6 +280,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <script src="script/data.js"></script>
+<script src="script/i18n.js"></script>
 <script src="script/app.js"></script>
 </body>
 </html>

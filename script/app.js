@@ -64,6 +64,17 @@ function goReader(slug) {
   window.location.href = `${PAGES}lector.html?book=${slug}`;
 }
 
+// ---- PAGE LOADER ----
+window.addEventListener('load', () => {
+  const loader = document.getElementById('pageLoader');
+  if (loader) {
+    setTimeout(() => {
+      loader.classList.add('fade-out');
+      setTimeout(() => loader.remove(), 700);
+    }, 600);
+  }
+});
+
 // ---- NAVBAR SCROLL ----
 window.addEventListener('scroll', () => {
   const nav = qs('#mainNav');
@@ -103,13 +114,18 @@ function initSearch() {
 // ---- DONATE ----
 function openDonate()  { qs('#donateModal')?.classList.add('open'); }
 function closeDonate() { qs('#donateModal')?.classList.remove('open'); }
-function donate(amount) {
+function donate(amount, btn) {
   qsa('.lv-donate-amount').forEach(b => b.classList.remove('selected'));
-  event.target.closest('.lv-donate-amount').classList.add('selected');
-  const paypalBtn   = qs('#paypalBtn');
-  const paypalEmail = 'TU_PAYPAL_EMAIL@gmail.com';
-  paypalBtn.href    = `https://www.paypal.com/donate/?hosted_button_id=W4BCJLPCUQVX6&amount=${amount}&currency_code=USD&item_name=Donacion+FSTBooks`;
-  paypalBtn.style.display = 'flex';
+  if (btn) btn.classList.add('selected');
+  else if (typeof event !== 'undefined' && event?.target) {
+    event.target.closest('.lv-donate-amount')?.classList.add('selected');
+  }
+  const paypalBtn = qs('#paypalBtn');
+  if (!paypalBtn) return;
+  // PayPal donate link – reemplazá hosted_button_id por el tuyo
+  paypalBtn.href = `https://www.paypal.com/donate/?hosted_button_id=W4BCJLPCUQVX6&amount=${amount}&currency_code=USD&item_name=Donacion+FSTBooks`;
+  paypalBtn.style.display = 'inline-flex';
+  paypalBtn.innerHTML = `<i class="fab fa-paypal me-2"></i>Donar $${amount} con PayPal`;
 }
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape') {
@@ -177,16 +193,16 @@ function initHome() {
       newWrapper.appendChild(slide);
     });
     new Swiper('#newSwiper', {
-      spaceBetween: 20,
+      spaceBetween: 16,
       grabCursor: true,
       loop: true,
-      autoplay: { delay: 4000, disableOnInteraction: false },
-      pagination: { el: '.lv-swiper-pagination', clickable: true },
+      speed: 600,
+      autoplay: { delay: 4200, disableOnInteraction: false, pauseOnMouseEnter: true },
+      pagination: { el: '#newSwiper .lv-swiper-pagination', clickable: true },
       breakpoints: {
-        0:    { slidesPerView: 1 },
-        480:  { slidesPerView: 2 },
-        768:  { slidesPerView: 3 },
-        1200: { slidesPerView: 4 },
+        0:    { slidesPerView: 1.2, spaceBetween: 12 },
+        520:  { slidesPerView: 2, spaceBetween: 14 },
+        900:  { slidesPerView: 3, spaceBetween: 16 },
       }
     });
   }
@@ -201,19 +217,25 @@ function initHome() {
       featWrapper.appendChild(slide);
     });
     new Swiper('#featuredSwiper', {
-      spaceBetween: 20,
+      spaceBetween: 16,
       grabCursor: true,
       loop: true,
-      navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
-      autoplay: { delay: 5000, disableOnInteraction: false },
+      speed: 600,
+      navigation: {
+        nextEl: '#featuredSwiper .swiper-button-next',
+        prevEl: '#featuredSwiper .swiper-button-prev'
+      },
+      autoplay: { delay: 5000, disableOnInteraction: false, pauseOnMouseEnter: true },
       breakpoints: {
-        0:    { slidesPerView: 1 },
-        480:  { slidesPerView: 2 },
-        768:  { slidesPerView: 3 },
-        1200: { slidesPerView: 4 },
+        0:    { slidesPerView: 1.2, spaceBetween: 12 },
+        520:  { slidesPerView: 2, spaceBetween: 14 },
+        900:  { slidesPerView: 3, spaceBetween: 16 },
       }
     });
   }
+
+  // Banner proyectos relacionados
+  initProjectsBanner();
 
   // Footer categorías
   const footerCats = qs('#footerCategories');
@@ -224,6 +246,39 @@ function initHome() {
   }
 
   initUpload();
+}
+
+function initProjectsBanner() {
+  const el = qs('#projectsBannerTrack');
+  if (!el) return;
+  const projects = [
+    {
+      title: 'FSTail Solutions',
+      desc: 'Web development & digital solutions',
+      url: 'https://alqmst99.github.io/profesional-plan/index.html',
+      tag: 'Agency',
+    },
+    {
+      title: 'Galerie Lumière',
+      desc: 'Photography & visual gallery',
+      url: 'https://alqmst99.github.io/galerie-lumiere/',
+      tag: 'Gallery',
+    },
+    {
+      title: 'FSTail Blog',
+      desc: 'Articles, tips & updates',
+      url: 'https://blog-fst-ecru.vercel.app/',
+      tag: 'Blog',
+    },
+  ];
+  el.innerHTML = projects.map(p => `
+    <a class="lv-project-card" href="${p.url}" target="_blank" rel="noopener noreferrer">
+      <span class="lv-project-tag">${p.tag}</span>
+      <h4>${p.title}</h4>
+      <p>${p.desc}</p>
+      <span class="lv-project-cta">Visit <i class="fas fa-arrow-right"></i></span>
+    </a>
+  `).join('');
 }
 
 function initUpload() {
