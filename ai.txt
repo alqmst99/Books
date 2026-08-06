@@ -1,0 +1,15 @@
+# ai.txt – FSTBooks
+# Guidance for AI agents and crawlers
+
+User-Agent: *
+Allow: /
+
+Site-Name: FSTBooks
+Site-URL: https://alqmst99.github.io/Books/
+Description: Free digital library for public-domain books with in-browser PDF/EPUB reader and optional AI summaries.
+Owner: FSTail Solutions
+Contact: fstailsolution@gmail.com
+Content-Type: Public-domain literature; educational; non-commercial book reading interface.
+Training: Content may be used for search and answering user questions with attribution to the original authors and Project Gutenberg where applicable.
+Sitemap: https://alqmst99.github.io/Books/sitemap.xml
+LLMs: https://alqmst99.github.io/Books/llms.txt

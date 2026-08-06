@@ -111,56 +111,372 @@ function setupAIForDemo() {
     );
 }
 
-// ---- Abrir libro HTML de Gutenberg ----
-// Gutenberg bloquea iframes (X-Frame-Options). Abrimos en tarjeta + pestaña nueva.
-function openHTMLBook(url) {
-  showLoading(false);
-  const container = document.getElementById("pdfContainer");
-  if (container) container.style.display = "none";
+// ---- Abrir libro HTML de Gutenberg DENTRO del lector ----
+// Gutenberg bloquea iframes; traemos el HTML/PDF por proxy y lo mostramos aquí.
+let htmlPages = [];
+let htmlMode = false;
+let epubMode = false;
+let epubBook = null;
+let epubRendition = null;
 
-  const loadDiv = document.getElementById("readerLoading");
-  if (loadDiv) loadDiv.style.display = "none";
+function extractGutenbergId(url) {
+  const m = String(url || "").match(/\/(?:files|ebooks|epub|cache\/epub)\/(\d+)/);
+  return m ? m[1] : null;
+}
 
-  const errorDiv = document.getElementById("readerError");
-  const title = currentBook?.title || "Libro";
-  const author = currentBook?.author || "";
-  const cover = currentBook?.cover || "";
+function gutenbergCandidates(id, originalUrl) {
+  const list = [];
+  if (id) {
+    // EPUB (preferido para lectura in-app)
+    list.push(`https://www.gutenberg.org/cache/epub/${id}/pg${id}-images.epub`);
+    list.push(`https://www.gutenberg.org/cache/epub/${id}/pg${id}.epub`);
+    list.push(`https://www.gutenberg.org/ebooks/${id}.epub.images`);
+    list.push(`https://www.gutenberg.org/ebooks/${id}.epub.noimages`);
+    // PDFs
+    list.push(`https://www.gutenberg.org/files/${id}/${id}-pdf.pdf`);
+    list.push(`https://www.gutenberg.org/cache/epub/${id}/pg${id}.pdf`);
+    // HTML
+    list.push(`https://www.gutenberg.org/files/${id}/${id}-h/${id}-h.htm`);
+    list.push(`https://www.gutenberg.org/cache/epub/${id}/pg${id}-images.html`);
+    list.push(`https://www.gutenberg.org/files/${id}/${id}-h/${id}-h.html`);
+    // Texto
+    list.push(`https://www.gutenberg.org/files/${id}/${id}-0.txt`);
+    list.push(`https://www.gutenberg.org/files/${id}/${id}.txt`);
+    list.push(`https://www.gutenberg.org/cache/epub/${id}/pg${id}.txt`);
+  }
+  if (originalUrl && !list.includes(originalUrl)) list.unshift(originalUrl);
+  return list;
+}
 
-  // ID de Gutenberg para link estable al ebook
-  const idMatch = url.match(/\/(?:files|ebooks|epub)\/(\d+)/);
-  const stableUrl = idMatch
-    ? `https://www.gutenberg.org/ebooks/${idMatch[1]}`
-    : url;
+async function fetchTextViaProxy(url) {
+  // Proxies CORS públicos (orden: directo → HTML completo → texto)
+  const proxies = [
+    { build: (u) => u, asText: false },
+    { build: (u) => `https://proxy.cors.sh/${u}`, asText: false },
+    { build: (u) => `https://api.allorigins.win/raw?url=${encodeURIComponent(u)}`, asText: false },
+    { build: (u) => `https://r.jina.ai/${u}`, asText: true }, // markdown/texto legible
+  ];
+  let lastErr = null;
+  for (const { build, asText } of proxies) {
+    try {
+      const res = await fetch(build(url), {
+        method: "GET",
+        headers: { "x-requested-with": "XMLHttpRequest" },
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const ct = (res.headers.get("content-type") || "").toLowerCase();
+      if (!asText && (ct.includes("pdf") || url.endsWith(".pdf"))) {
+        const buf = await res.arrayBuffer();
+        if (buf.byteLength < 500) throw new Error("PDF vacío");
+        // Validar cabecera PDF
+        const head = new Uint8Array(buf.slice(0, 5));
+        const sig = String.fromCharCode(...head);
+        if (!sig.startsWith("%PDF")) throw new Error("No es PDF");
+        return { type: "pdf", data: buf };
+      }
+      const text = await res.text();
+      if (!text || text.length < 80) throw new Error("Respuesta vacía");
+      if (/error\s*404|page not found|does not have the page/i.test(text) && text.length < 2500) {
+        throw new Error("404 en respuesta");
+      }
+      // Evitar páginas de proxies basura
+      if (/hidemy\.name|corsproxy\.io\/pricing/i.test(text) && text.length < 100000) {
+        throw new Error("Proxy devolvió página intermedia");
+      }
+      const type = asText || url.endsWith(".txt") ? "text" : "html";
+      return { type, data: text, sourceUrl: url };
+    } catch (e) {
+      lastErr = e;
+    }
+  }
+  throw lastErr || new Error("No se pudo obtener el contenido");
+}
 
-  if (errorDiv) {
-    errorDiv.style.display = "flex";
-    errorDiv.innerHTML = `
-      <div class="lv-demo-mode">
-        ${cover ? `<img src="${cover}" alt="" style="width:12rem;height:18rem;object-fit:cover;border-radius:6px;margin:0 auto 1.5rem;box-shadow:0 8px 32px rgba(0,0,0,.35)">` : ""}
-        <h4 style="color:#fff;font-family:var(--font-serif)">${title}</h4>
-        <p class="text-muted" style="margin:.4rem 0 1.2rem">${author}</p>
-        <p style="color:rgba(255,255,255,.65);max-width:42rem;line-height:1.7;margin:0 auto 1.6rem">
-          Este libro está en <strong>Project Gutenberg</strong>. Por políticas de seguridad del sitio no se puede embeber aquí; abrilo en una pestaña nueva para leerlo completo.
-        </p>
-        <a href="${stableUrl}" target="_blank" rel="noopener noreferrer" class="lv-btn-primary" style="margin:.4rem">
-          <i class="fas fa-external-link-alt me-2"></i>Leer en Project Gutenberg
-        </a>
-        <a href="${url}" target="_blank" rel="noopener noreferrer" class="lv-btn-outline mt-2" style="margin:.4rem;color:#fff;border-color:rgba(255,255,255,.3)">
-          <i class="fas fa-book-open me-2"></i>Abrir versión HTML
-        </a>
-        <a href="../index.html" class="lv-btn-outline mt-3" style="color:#fff;border-color:rgba(255,255,255,.25)">
-          <i class="fas fa-arrow-left me-2"></i>Volver
-        </a>
-      </div>`;
+function sanitizeGutenbergHtml(html, baseUrl) {
+  const doc = new DOMParser().parseFromString(html, "text/html");
+  doc.querySelectorAll("script, style, link, noscript, iframe, object, embed").forEach((n) => n.remove());
+  // Quitar chrome típico de Gutenberg
+  doc.querySelectorAll(
+    "#pg-header, #pg-footer, .pg-header, .pg-footer, [id*='pg-header'], [id*='pg-footer']"
+  ).forEach((n) => n.remove());
+
+  // Absolutizar imágenes y links relativos
+  const base = baseUrl.replace(/\/[^/]*$/, "/");
+  doc.querySelectorAll("img[src]").forEach((img) => {
+    const src = img.getAttribute("src") || "";
+    if (src && !/^https?:|^data:/i.test(src)) {
+      try { img.src = new URL(src, base).href; } catch (_) {}
+    }
+  });
+
+  const body = doc.body;
+  if (!body) return html;
+  // Preferir el contenido principal
+  const main =
+    body.querySelector("[role='main']") ||
+    body.querySelector(".chapter") ||
+    body;
+  return main.innerHTML || body.innerHTML;
+}
+
+function splitIntoPages(htmlOrText, isPlainText) {
+  const PAGE_CHARS = 3200;
+  if (isPlainText) {
+    const clean = htmlOrText
+      .replace(/\r\n/g, "\n")
+      .replace(/\n{3,}/g, "\n\n")
+      .trim();
+    const pages = [];
+    let i = 0;
+    while (i < clean.length) {
+      let end = Math.min(i + PAGE_CHARS, clean.length);
+      if (end < clean.length) {
+        const slice = clean.lastIndexOf("\n\n", end);
+        if (slice > i + 800) end = slice;
+      }
+      const chunk = clean.slice(i, end).trim();
+      if (chunk) {
+        pages.push(
+          `<pre class="lv-html-plain">${chunk
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")}</pre>`
+        );
+      }
+      i = end;
+    }
+    return pages.length ? pages : ["<p>(Sin contenido)</p>"];
   }
 
-  document.getElementById("prevPage") && (document.getElementById("prevPage").disabled = true);
-  document.getElementById("nextPage") && (document.getElementById("nextPage").disabled = true);
-  document.getElementById("pageInput") && (document.getElementById("pageInput").disabled = true);
-  const tot = document.getElementById("totalPages");
-  if (tot) tot.textContent = "—";
+  // HTML: partir por bloques
+  const wrap = document.createElement("div");
+  wrap.innerHTML = htmlOrText;
+  const blocks = [...wrap.children];
+  if (!blocks.length) {
+    // texto suelto
+    const t = wrap.textContent || "";
+    return splitIntoPages(t, true);
+  }
 
+  const pages = [];
+  let buf = "";
+  let len = 0;
+  const flush = () => {
+    if (buf.trim()) pages.push(buf);
+    buf = "";
+    len = 0;
+  };
+  for (const el of blocks) {
+    const piece = el.outerHTML;
+    const l = (el.textContent || "").length;
+    if (len + l > PAGE_CHARS && buf) flush();
+    buf += piece;
+    len += l;
+    // capítulos largos: forzar corte
+    if (len > PAGE_CHARS * 1.6) flush();
+  }
+  flush();
+  return pages.length ? pages : [htmlOrText];
+}
+
+function ensureHtmlReaderDom() {
+  const mainArea = document.getElementById("readerMain");
+  let view = document.getElementById("htmlReaderView");
+  if (!view && mainArea) {
+    view = document.createElement("div");
+    view.id = "htmlReaderView";
+    view.className = "lv-html-reader";
+    mainArea.appendChild(view);
+  }
+  return view;
+}
+
+function renderHtmlPage(num) {
+  const view = ensureHtmlReaderDom();
+  if (!view || !htmlPages.length) return;
+  currentPage = Math.max(1, Math.min(num, htmlPages.length));
+  view.innerHTML = `<article class="lv-html-page">${htmlPages[currentPage - 1]}</article>`;
+  view.scrollTop = 0;
+  const pageInput = document.getElementById("pageInput");
+  if (pageInput) pageInput.value = currentPage;
+  const tot = document.getElementById("totalPages");
+  if (tot) tot.textContent = String(htmlPages.length);
+  updateProgress();
+  saveProgress(currentPage);
+}
+
+async function fetchBinaryViaProxy(url) {
+  const proxies = [
+    (u) => u,
+    (u) => `https://proxy.cors.sh/${u}`,
+    (u) => `https://api.allorigins.win/raw?url=${encodeURIComponent(u)}`,
+  ];
+  let lastErr = null;
+  for (const build of proxies) {
+    try {
+      const res = await fetch(build(url), {
+        method: "GET",
+        headers: { "x-requested-with": "XMLHttpRequest" },
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const buf = await res.arrayBuffer();
+      if (buf.byteLength < 500) throw new Error("archivo vacío");
+      return buf;
+    } catch (e) {
+      lastErr = e;
+    }
+  }
+  throw lastErr || new Error("No se pudo descargar");
+}
+
+function ensureEpubDom() {
+  const mainArea = document.getElementById("readerMain");
+  let view = document.getElementById("epubViewer");
+  if (!view && mainArea) {
+    view = document.createElement("div");
+    view.id = "epubViewer";
+    view.className = "lv-epub-viewer";
+    mainArea.appendChild(view);
+  }
+  return view;
+}
+
+async function openEpubFromBuffer(buf) {
+  if (typeof ePub === "undefined") throw new Error("epub.js no cargado");
+  epubMode = true;
+  htmlMode = false;
+  const container = document.getElementById("pdfContainer");
+  if (container) container.style.display = "none";
+  const htmlView = document.getElementById("htmlReaderView");
+  if (htmlView) htmlView.style.display = "none";
+  const err = document.getElementById("readerError");
+  if (err) err.style.display = "none";
+
+  const view = ensureEpubDom();
+  view.innerHTML = "";
+  view.style.display = "block";
+
+  if (epubBook) {
+    try { epubBook.destroy(); } catch (_) {}
+  }
+  epubBook = ePub(buf);
+  epubRendition = epubBook.renderTo(view, {
+    width: "100%",
+    height: "100%",
+    flow: "paginated",
+    allowScriptedContent: false,
+  });
+  await epubRendition.display();
+
+  // páginas aproximadas
+  try {
+    await epubBook.ready;
+    const spine = epubBook.spine;
+    totalPages = spine?.length || 1;
+  } catch (_) {
+    totalPages = 1;
+  }
+  currentPage = 1;
+  const tot = document.getElementById("totalPages");
+  if (tot) tot.textContent = String(totalPages);
+  const pageInput = document.getElementById("pageInput");
+  if (pageInput) pageInput.value = "1";
+  updateProgress();
+  showLoading(false);
+}
+
+async function openHTMLBook(url) {
+  showLoading(true);
+  htmlMode = true;
+  epubMode = false;
+  htmlPages = [];
+
+  const container = document.getElementById("pdfContainer");
+  if (container) container.style.display = "none";
+  const err = document.getElementById("readerError");
+  if (err) err.style.display = "none";
+
+  const id = extractGutenbergId(url);
+  const candidates = gutenbergCandidates(id, url);
+
+  // 1) EPUB primero
+  if (typeof ePub !== "undefined") {
+    for (const cand of candidates.filter((u) => /\.epub/i.test(u))) {
+      try {
+        const buf = await fetchBinaryViaProxy(cand);
+        // ZIP signature PK
+        const head = new Uint8Array(buf.slice(0, 2));
+        if (head[0] !== 0x50 || head[1] !== 0x4b) continue;
+        await openEpubFromBuffer(buf);
+        setupControls();
+        setupAIForDemo();
+        return;
+      } catch (e) {
+        console.warn("EPUB fail", cand, e);
+      }
+    }
+  }
+
+  // 2) PDF
+  for (const cand of candidates.filter((u) => u.endsWith(".pdf"))) {
+    try {
+      const result = await fetchTextViaProxy(cand);
+      if (result.type === "pdf") {
+        htmlMode = false;
+        epubMode = false;
+        const blob = new Blob([result.data], { type: "application/pdf" });
+        const blobUrl = URL.createObjectURL(blob);
+        await loadPDF(blobUrl);
+        setupControls();
+        return;
+      }
+    } catch (_) {}
+  }
+
+  // 3) HTML o texto
+  let loaded = null;
+  for (const cand of candidates.filter((u) => !u.endsWith(".pdf") && !/\.epub/i.test(u))) {
+    try {
+      loaded = await fetchTextViaProxy(cand);
+      if (loaded) break;
+    } catch (_) {}
+  }
+
+  if (!loaded) {
+    showLoading(false);
+    showError(
+      "No se pudo cargar el libro desde Project Gutenberg. Probá de nuevo más tarde o abrí el catálogo."
+    );
+    setupAIForDemo();
+    return;
+  }
+
+  let pages;
+  if (loaded.type === "text") {
+    pages = splitIntoPages(loaded.data, true);
+  } else {
+    const clean = sanitizeGutenbergHtml(loaded.data, loaded.sourceUrl || url);
+    pages = splitIntoPages(clean, false);
+  }
+
+  htmlPages = pages;
+  totalPages = pages.length;
+  showLoading(false);
+
+  const view = ensureHtmlReaderDom();
+  if (view) view.style.display = "block";
+
+  // Controles de página activos
+  ["prevPage", "nextPage", "pageInput"].forEach((idEl) => {
+    const el = document.getElementById(idEl);
+    if (el) el.disabled = false;
+  });
+
+  const saved = bookKey ? localStorage.getItem(bookKey + "_page") : null;
+  const startPage = saved ? Math.min(parseInt(saved, 10) || 1, totalPages) : 1;
+  renderHtmlPage(startPage);
   setupAIForDemo();
+  setupControls();
 }
 
 // ---- Cargar PDF local (desde FileReader data URL o blob URL) ----
@@ -375,58 +691,127 @@ function addBookmark() {
   localStorage.setItem(key, JSON.stringify(list));
 }
 
+// ---- Navegación unificada (PDF o HTML) ----
+function goToPage(num) {
+  if (epubMode && epubRendition) {
+    currentPage = Math.max(1, Math.min(num, totalPages || 1));
+    if (num > (parseInt(document.getElementById("pageInput")?.value || "1", 10) || 1)) {
+      epubRendition.next();
+    } else if (num < (parseInt(document.getElementById("pageInput")?.value || "1", 10) || 1)) {
+      epubRendition.prev();
+    } else {
+      // saltar por spine index si es posible
+      try {
+        const item = epubBook?.spine?.get(currentPage - 1);
+        if (item) epubRendition.display(item.href);
+        else epubRendition.display(currentPage - 1);
+      } catch (_) {
+        epubRendition.display(currentPage - 1);
+      }
+    }
+    const pageInput = document.getElementById("pageInput");
+    if (pageInput) pageInput.value = currentPage;
+    updateProgress();
+    saveProgress(currentPage);
+    return;
+  }
+  if (htmlMode) {
+    renderHtmlPage(num);
+    return;
+  }
+  if (pdfDoc) renderPage(num);
+}
+
+let controlsReady = false;
+
 // ---- Controles ----
 function setupControls() {
+  if (controlsReady) return;
+  controlsReady = true;
+
   document.getElementById("prevPage")?.addEventListener("click", () => {
-    if (currentPage > 1) {
-      currentPage--;
-      renderPage(currentPage);
+    if (epubMode && epubRendition) {
+      epubRendition.prev();
+      currentPage = Math.max(1, currentPage - 1);
+      const pageInput = document.getElementById("pageInput");
+      if (pageInput) pageInput.value = currentPage;
+      updateProgress();
+      saveProgress(currentPage);
+      return;
     }
+    if (currentPage > 1) goToPage(currentPage - 1);
   });
   document.getElementById("nextPage")?.addEventListener("click", () => {
-    if (currentPage < totalPages) {
-      currentPage++;
-      renderPage(currentPage);
+    if (epubMode && epubRendition) {
+      epubRendition.next();
+      currentPage = Math.min(totalPages || currentPage + 1, currentPage + 1);
+      const pageInput = document.getElementById("pageInput");
+      if (pageInput) pageInput.value = currentPage;
+      updateProgress();
+      saveProgress(currentPage);
+      return;
     }
+    if (currentPage < totalPages) goToPage(currentPage + 1);
   });
 
   document.getElementById("fullscreenBtn")?.addEventListener("click", toggleFullscreen);
 
   document.getElementById("fitWidthBtn")?.addEventListener("click", () => {
+    if (htmlMode) {
+      const view = document.getElementById("htmlReaderView");
+      if (view) view.classList.toggle("lv-html-wide");
+      return;
+    }
     scale = 1.0;
     fitMode = "width";
-    renderPage(currentPage);
+    goToPage(currentPage);
   });
 
   const pageInput = document.getElementById("pageInput");
   pageInput?.addEventListener("change", () => {
     const n = parseInt(pageInput.value, 10);
-    if (n >= 1 && n <= totalPages) {
-      currentPage = n;
-      renderPage(currentPage);
-    } else if (pageInput) pageInput.value = currentPage;
+    if (n >= 1 && n <= totalPages) goToPage(n);
+    else if (pageInput) pageInput.value = currentPage;
   });
 
   document.getElementById("zoomIn")?.addEventListener("click", () => {
+    if (htmlMode) {
+      const view = document.getElementById("htmlReaderView");
+      if (view) {
+        const cur = parseFloat(view.dataset.zoom || "1");
+        const next = Math.min(cur + 0.1, 1.6);
+        view.dataset.zoom = String(next);
+        view.style.fontSize = `${next}em`;
+      }
+      return;
+    }
     scale = Math.min(+(scale + 0.15).toFixed(2), 3);
     fitMode = "custom";
-    renderPage(currentPage);
+    goToPage(currentPage);
   });
   document.getElementById("zoomOut")?.addEventListener("click", () => {
+    if (htmlMode) {
+      const view = document.getElementById("htmlReaderView");
+      if (view) {
+        const cur = parseFloat(view.dataset.zoom || "1");
+        const next = Math.max(cur - 0.1, 0.8);
+        view.dataset.zoom = String(next);
+        view.style.fontSize = `${next}em`;
+      }
+      return;
+    }
     scale = Math.max(+(scale - 0.15).toFixed(2), 0.4);
     fitMode = "custom";
-    renderPage(currentPage);
+    goToPage(currentPage);
   });
 
   document.addEventListener("keydown", (e) => {
     if (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA") return;
     if ((e.key === "ArrowRight" || e.key === "ArrowDown" || e.key === "PageDown") && currentPage < totalPages) {
-      currentPage++;
-      renderPage(currentPage);
+      goToPage(currentPage + 1);
     }
     if ((e.key === "ArrowLeft" || e.key === "ArrowUp" || e.key === "PageUp") && currentPage > 1) {
-      currentPage--;
-      renderPage(currentPage);
+      goToPage(currentPage - 1);
     }
     if (e.key === "f" || e.key === "F") toggleFullscreen();
   });
@@ -648,7 +1033,11 @@ async function openAIModal(forceGenerate = false) {
 
   let pageText = "";
   try {
-    if (pdfDoc) {
+    if (htmlMode && htmlPages[currentPage - 1]) {
+      const tmp = document.createElement("div");
+      tmp.innerHTML = htmlPages[currentPage - 1];
+      pageText = (tmp.textContent || "").replace(/\s+/g, " ").trim().slice(0, 1800);
+    } else if (pdfDoc) {
       const page = await pdfDoc.getPage(currentPage);
       const tc = await page.getTextContent();
       pageText = tc.items.map((i) => i.str).join(" ").slice(0, 1800);

@@ -1,0 +1,13 @@
+/* TEAM */
+Developer: FSTail Solutions
+Location: Santa Fe, Argentina
+Site: https://alqmst99.github.io/profesional-plan/
+Contact: fstailsolution@gmail.com
+
+/* SITE */
+Name: FSTBooks
+URL: https://alqmst99.github.io/Books/
+Languages: Spanish, English
+Standards: HTML5, CSS3, ES modules / vanilla JS
+Components: PDF.js, epub.js, Bootstrap 5, Swiper
+Last update: 2026-08-06

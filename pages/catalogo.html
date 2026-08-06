@@ -3,11 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Catálogo – FSTBooks</title>
-  <meta name="description" content="Explora nuestro catálogo completo de libros digitales gratuitos. Filtra por categoría, año o autor." />
+  <title>Catálogo – FSTBooks | Catalog</title>
+  <meta name="description" content="Explora el catálogo completo de FSTBooks. Libros clásicos en dominio público. Browse free public-domain books." />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://alqmst99.github.io/Books/pages/catalogo.html" />
+  <meta property="og:title" content="Catálogo – FSTBooks" />
+  <meta property="og:url" content="https://alqmst99.github.io/Books/pages/catalogo.html" />
+  <meta name="theme-color" content="#FAF8F4" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,800;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../style.css" />
 </head>
 <body>
@@ -21,9 +26,12 @@
     </button>
     <div class="collapse navbar-collapse" id="navMenu">
       <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-1">
-        <li class="nav-item"><a class="nav-link lv-nav-link" href="../index.html"><i class="fas fa-home me-1"></i>Inicio</a></li>
-        <li class="nav-item"><a class="nav-link lv-nav-link active" href="catalogo.html"><i class="fas fa-th-large me-1"></i>Catálogo</a></li>
-        <li class="nav-item"><button class="btn lv-btn-donate ms-lg-3" onclick="openDonate()"><i class="fas fa-heart me-1"></i>Donar</button></li>
+        <li class="nav-item"><a class="nav-link lv-nav-link" href="../index.html" data-i18n="nav.home"><i class="fas fa-home me-1"></i>Inicio</a></li>
+        <li class="nav-item"><a class="nav-link lv-nav-link active" href="catalogo.html" data-i18n="nav.catalog"><i class="fas fa-th-large me-1"></i>Catálogo</a></li>
+        <li class="nav-item"><button class="btn lv-btn-donate ms-lg-3" onclick="openDonate()" data-i18n="nav.donate"><i class="fas fa-heart me-1"></i>Donar</button></li>
+        <li class="nav-item ms-lg-2">
+          <button type="button" class="lv-lang-btn" id="langToggle" title="ES / EN">ES</button>
+        </li>
       </ul>
       <div class="lv-search-wrap ms-lg-4 mt-3 mt-lg-0">
         <input type="search" id="globalSearch" class="lv-search-input" placeholder="Buscar libro o autor…" autocomplete="off" />
@@ -37,8 +45,8 @@
 <!-- PAGE HEADER -->
 <div class="lv-page-header">
   <div class="container">
-    <h1 class="lv-page-title">Catálogo <em>Completo</em></h1>
-    <p class="lv-page-sub">Explora, filtra y encuentra tu próxima lectura</p>
+    <h1 class="lv-page-title" data-i18n="catalog.title">Catálogo <em>Completo</em></h1>
+    <p class="lv-page-sub" data-i18n="catalog.sub">Explora, filtra y encuentra tu próxima lectura</p>
   </div>
 </div>
 
@@ -49,7 +57,7 @@
     <div class="col-lg-3" id="sidebarCol">
       <div class="lv-sidebar" id="filterSidebar">
         <div class="lv-sidebar-header">
-          <h5><i class="fas fa-sliders-h me-2"></i>Filtros</h5>
+          <h5 data-i18n="catalog.filters"><i class="fas fa-sliders-h me-2"></i>Filtros</h5>
           <button class="lv-sidebar-close d-lg-none" id="closeSidebar"><i class="fas fa-times"></i></button>
         </div>
         <div class="lv-filter-group">
@@ -129,10 +137,10 @@
       <h3 class="lv-modal-title">Apoya FSTBooks</h3>
       <p class="lv-modal-sub">Tu donación nos ayuda a mantener esta biblioteca gratuita.</p>
       <div class="lv-donate-amounts">
-        <button class="lv-donate-amount" onclick="donate(1)">$1</button>
-        <button class="lv-donate-amount" onclick="donate(5)">$5</button>
-        <button class="lv-donate-amount lv-donate-popular" onclick="donate(10)">$10 <span>Popular</span></button>
-        <button class="lv-donate-amount" onclick="donate(25)">$25</button>
+        <button class="lv-donate-amount" onclick="donate(1, this)">$1</button>
+        <button class="lv-donate-amount" onclick="donate(5, this)">$5</button>
+        <button class="lv-donate-amount lv-donate-popular" onclick="donate(10, this)">$10 <span>Popular</span></button>
+        <button class="lv-donate-amount" onclick="donate(25, this)">$25</button>
       </div>
       <a id="paypalBtn" href="#" target="_blank" class="lv-btn-primary w-100 mt-3" style="display:none">
         <i class="fab fa-paypal me-2"></i>Donar con PayPal
@@ -152,6 +160,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="../script/data.js"></script>
+<script src="../script/i18n.js"></script>
 <script src="../script/app.js"></script>
 </body>
 </html>

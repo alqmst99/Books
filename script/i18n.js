@@ -20,6 +20,18 @@ const I18N = {
     'feat.title': 'Libros <em>Destacados</em>',
     'cat.title': 'Explorar por <em>Categoría</em>',
     'upload.title': 'Carga y lee<br><em>tu archivo</em>',
+    'catalog.title': 'Catálogo <em>Completo</em>',
+    'catalog.sub': 'Explora, filtra y encuentra tu próxima lectura',
+    'catalog.filters': 'Filtros',
+    'catalog.search': 'Búsqueda',
+    'catalog.category': 'Categoría',
+    'catalog.period': 'Período',
+    'catalog.language': 'Idioma',
+    'catalog.type': 'Tipo',
+    'catalog.clear': 'Limpiar filtros',
+    'catalog.empty': 'Sin resultados',
+    'catalog.emptyHint': 'Prueba con otros filtros o términos de búsqueda.',
+    'catalog.results': 'resultados',
   },
   en: {
     'nav.home': 'Home',
@@ -41,6 +53,18 @@ const I18N = {
     'feat.title': 'Featured <em>Books</em>',
     'cat.title': 'Browse by <em>Category</em>',
     'upload.title': 'Upload and read<br><em>your file</em>',
+    'catalog.title': 'Full <em>Catalog</em>',
+    'catalog.sub': 'Browse, filter and find your next read',
+    'catalog.filters': 'Filters',
+    'catalog.search': 'Search',
+    'catalog.category': 'Category',
+    'catalog.period': 'Period',
+    'catalog.language': 'Language',
+    'catalog.type': 'Type',
+    'catalog.clear': 'Clear filters',
+    'catalog.empty': 'No results',
+    'catalog.emptyHint': 'Try different filters or search terms.',
+    'catalog.results': 'results',
   },
 };
 
@@ -62,8 +86,15 @@ function setLang(lang) {
     const key = el.getAttribute('data-i18n');
     if (dict[key] != null) el.innerHTML = dict[key];
   });
+  // placeholders
+  document.querySelectorAll('[data-i18n-placeholder]').forEach((el) => {
+    const key = el.getAttribute('data-i18n-placeholder');
+    if (dict[key] != null) el.setAttribute('placeholder', dict[key]);
+  });
   const btn = document.getElementById('langToggle');
   if (btn) btn.textContent = lang === 'es' ? 'EN' : 'ES';
+  // notify app if needed
+  document.dispatchEvent(new CustomEvent('lv:langchange', { detail: { lang } }));
 }
 
 document.addEventListener('DOMContentLoaded', () => {

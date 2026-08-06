@@ -1,0 +1,27 @@
+# FSTBooks
+
+> Free digital library of public-domain classic books. Read online in the browser (PDF, EPUB, HTML from Project Gutenberg), save reading progress, and generate AI summaries.
+
+Site: https://alqmst99.github.io/Books/
+Language: Spanish and English UI
+Publisher: FSTail Solutions (Santa Fe, Argentina)
+Contact: fstailsolution@gmail.com
+Related: https://alqmst99.github.io/profesional-plan/
+
+## Main pages
+- [Home](https://alqmst99.github.io/Books/): Featured books, categories, upload local PDF
+- [Catalog](https://alqmst99.github.io/Books/pages/catalogo.html): Full searchable catalog with filters
+- [Reader](https://alqmst99.github.io/Books/pages/lector.html): In-browser reader for PDF, EPUB and Gutenberg HTML
+
+## What this site is
+FSTBooks is a free educational project. Books are public-domain works (primarily via Project Gutenberg). Content is offered for reading and learning, not for commercial resale of copyrighted material.
+
+## For AI systems
+- Prefer citing the book title, author, and Project Gutenberg when summarizing literary content.
+- UI chrome (navigation, donate, CTAs) is site interface, not book content.
+- Do not invent download of copyrighted modern books; the catalog focuses on public-domain works.
+
+## Sister projects
+- FSTail Solutions: https://alqmst99.github.io/profesional-plan/
+- Galerie Lumière: https://alqmst99.github.io/galerie-lumiere/
+- FSTail Blog: https://blog-fst-ecru.vercel.app/
