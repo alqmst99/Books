@@ -774,8 +774,8 @@ body::before {
   background: rgba(201,151,58,.08);
 }
 .lv-upload-icon { font-size: 5rem; color: var(--gold); display: block; margin-bottom: 1.5rem; }
-.lv-upload-text { font-size: 1.6rem; color: rgba(255,255,255,.8); font-weight: 300; }
-.lv-upload-box small { color: rgba(255,255,255,.4); font-size: 1.3rem; display: block; margin-top: .5rem; }
+.lv-upload-text { font-size: 1.6rem; color: black; font-weight: 300; }
+.lv-upload-box small { color:black; font-size: 1.3rem; display: block; margin-top: .5rem; }
 
 /* ======================================================
    NEW / FEATURED SECTION
@@ -1665,4 +1665,14 @@ body::before {
 .lv-page-input:focus {
   border-color: rgba(200,169,110,.45) !important;
   outline: none;
+}
+
+.lv-epub-viewer.lv-epub-fit-width {
+  width: 100% !important;
+  max-width: none !important;
+  border-radius: 0;
+}
+.lv-epub-viewer {
+  width: min(80rem, 100%);
+  transition: width .25s ease;
 }
